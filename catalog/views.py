@@ -53,11 +53,16 @@ from rest_framework.views import APIView
 from . import models
 
 class BookApiView(APIView):
-    def get(self, request):
-        book = models.Book.objects.all()
-        toJson = serializers.BookSerializer(book, many =True) #many pra lidar com mts dados
+    def get(self, request,pk=None):
+        if pk:
+            book = Book.objects.get(pk=pk)
+            toJson = serializers.BookSerializer(book)
+        else:
+            book = models.Book.objects.all()
+            toJson = serializers.BookSerializer(book, many =True) #many pra lidar com mts dados
 
         return Response(toJson.data)
+    
     
     def post(self, request):
         serializer = serializers.BookSerializer(data=request.data)
@@ -84,3 +89,151 @@ class BookApiView(APIView):
         book = self.get_object(pk)
         book.delete()
         return Response(status=201) 
+
+class AuthorApiView(APIView):
+    def get(self, request,pk=None):
+        if pk:
+            author = self.get_object(pk)
+            toJson = serializers.AuthorSerializer(author)
+        else:
+            author = models.Author.objects.all()
+            toJson = serializers.AuthorSerializer(author, many =True) #many pra lidar com mts dados
+        return Response(toJson.data, status=200)
+    
+    def post(self, request):
+        serializer = serializers.AuthorSerializer(data=request.data)
+        if serializer.is_valid():
+            serializer.save()
+            return Response(serializer.data, status=201)
+        else:
+            return Response(serializer.errors, status=400)
+    def get_object(self, pk):
+        try:
+            return Author.objects.get(pk=pk)
+        except Author.DoesNotExist:
+            raise Http404
+    def put(self, request, pk):
+        Author = self.get_object(pk)
+        serializer = serializers.AuthorSerializer(Author, data= request.data)
+        if serializer.is_valid():
+            serializer.save()
+            return Response(serializer.data, status=202)
+        else:
+            return Response(serializer.errors, status=400)
+
+    def delete(self, request, pk): 
+        author = self.get_object(pk)
+        author.delete()
+        return Response(status=204)
+
+class BookInstanceApiView(APIView):
+    def get(self, request,pk=None):
+        if pk:
+            bookinstance = self.get_object(pk)
+            toJson = serializers.BookInstanceSerializer(bookinstance)
+        else:
+            bookinstance = models.BookInstance.objects.all()
+            toJson = serializers.BookInstanceSerializer(bookinstance, many =True) #many pra lidar com mts dados
+        return Response(toJson.data, status=200)
+    
+    def post(self, request):
+        serializer = serializers.BookInstanceSerializer(data=request.data)
+        if serializer.is_valid():
+            serializer.save()
+            return Response(serializer.data, status=201)
+        else:
+            return Response(serializer.errors, status=400)
+    def get_object(self, pk):
+        try:
+            return BookInstance.objects.get(pk=pk)
+        except BookInstance.DoesNotExist:
+            raise Http404
+    def put(self, request, pk):
+        bookInstance = self.get_object(pk)
+        serializer = serializers.BookInstanceSerializer(bookInstance, data= request.data)
+        if serializer.is_valid():
+            serializer.save()
+            return Response(serializer.data, status=202)
+        else:
+            return Response(serializer.errors, status=400)
+
+    def delete(self, request, pk): 
+        bookInstance = self.get_object(pk)
+        bookInstance.delete()
+        return Response(status=204)
+
+class GenreApiView(APIView):
+    def get(self, request, pk=None):
+        if pk:
+            genre = self.get_object(pk)
+            serializer = serializers.GenreSerializer(genre)
+        else:
+            genres = models.Genre.objects.all()
+            serializer = serializers.GenreSerializer(genres, many=True)
+        return Response(serializer.data, status=200)
+
+    def post(self, request):
+        serializer = serializers.GenreSerializer(data=request.data)
+        if serializer.is_valid():
+            serializer.save()
+            return Response(serializer.data, status=201)
+        else:
+            return Response(serializer.errors, status=400)
+
+    def get_object(self, pk):
+        try:
+            return models.Genre.objects.get(pk=pk)
+        except models.Genre.DoesNotExist:
+            raise Http404
+
+    def put(self, request, pk):
+        genre = self.get_object(pk)
+        serializer = serializers.GenreSerializer(genre, data=request.data)
+        if serializer.is_valid():
+            serializer.save()
+            return Response(serializer.data, status=200)
+        else:
+            return Response(serializer.errors, status=400)
+
+    def delete(self, request, pk):
+        genre = self.get_object(pk)
+        genre.delete()
+        return Response(status=204)
+
+class LanguageApiView(APIView):
+    def get(self, request, pk=None):
+        if pk:
+            language = self.get_object(pk)
+            serializer = serializers.LanguageSerializer(language)
+        else:
+            languages = models.Language.objects.all()
+            serializer = serializers.LanguageSerializer(languages, many=True)
+        return Response(serializer.data, status=200)
+
+    def post(self, request):
+        serializer = serializers.LanguageSerializer(data=request.data)
+        if serializer.is_valid():
+            serializer.save()
+            return Response(serializer.data, status=201)
+        else:
+            return Response(serializer.errors, status=400)
+
+    def get_object(self, pk):
+        try:
+            return models.Language.objects.get(pk=pk)
+        except models.Language.DoesNotExist:
+            raise Http404
+
+    def put(self, request, pk):
+        language = self.get_object(pk)
+        serializer = serializers.LanguageSerializer(language, data=request.data)
+        if serializer.is_valid():
+            serializer.save()
+            return Response(serializer.data, status=200)
+        else:
+            return Response(serializer.errors, status=400)
+
+    def delete(self, request, pk):
+        language = self.get_object(pk)
+        language.delete()
+        return Response(status=204)

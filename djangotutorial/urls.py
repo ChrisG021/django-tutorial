@@ -29,10 +29,20 @@ urlpatterns = [
 ] + static(settings.STATIC_URL, document_root=settings.STATIC_ROOT)
 
 ################## api ###################################
-from catalog.views import BookApiView
+from catalog.views import AuthorApiView, BookApiView, BookInstanceApiView, GenreApiView, LanguageApiView
 urlpatterns += [
     path("api/book",BookApiView.as_view()),
     path("api/book/<int:pk>",BookApiView.as_view()),
+    path("api/author", AuthorApiView.as_view()),
+    path("api/author/<int:pk>", AuthorApiView.as_view()),
+    path("api/bookinstance", BookInstanceApiView.as_view()),
+    path("api/bookinstance/<str:pk>", BookInstanceApiView.as_view()),
+    path("api/genre/", GenreApiView.as_view()),
+    path("api/genre/<int:pk>/", GenreApiView.as_view()),
+    path("api/language/", LanguageApiView.as_view()),
+    path("api/language/<int:pk>/", LanguageApiView.as_view()),
+
+
 ]
 
 
