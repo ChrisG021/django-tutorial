@@ -66,7 +66,7 @@ class BookApiView(APIView):
             return Response(serializer.data, status=201)
         else:
             return Response(serializer.errors, status=400)
-    def get_object(self, request, pk):
+    def get_object(self, pk):
         try:
             return Book.objects.get(pk=pk)
         except Book.DoesNotExist:
