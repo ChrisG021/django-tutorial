@@ -1,4 +1,5 @@
 from django.db import models
+from datetime import date
 class Genre(models.Model):
     """Model representing a book genre."""
     name = models.CharField(max_length=200, help_text='Enter a book genre (e.g. Science Fiction)')
@@ -46,7 +47,7 @@ class Book(models.Model):
         """Returns the url to access a detail record for this book."""
         return reverse('book-detail', args=[str(self.id)])
 import uuid # Required for unique book instances
-
+from django.contrib.auth.models import User
 class BookInstance(models.Model):
     """Model representing a specific copy of a book (i.e. that can be borrowed from the library)."""
     id = models.UUIDField(primary_key=True, default=uuid.uuid4, help_text='Unique ID for this particular book across whole library')
@@ -68,10 +69,17 @@ class BookInstance(models.Model):
         default='m',
         help_text='Book availability',
     )
+    #campo borrower
+    borrower = models.ForeignKey(User, on_delete=models.SET_NULL, null=True, blank=True) 
 
     class Meta:
         ordering = ['due_back']
-
+    @property
+    def is_overdue(self):
+        if self.due_back and date.today() > self.due_back:
+            return True
+        return False
+    
     def __str__(self):
         """String for representing the Model object."""
         return f'{self.id} ({self.book.title})'

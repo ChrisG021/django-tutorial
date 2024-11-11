@@ -26,6 +26,7 @@ urlpatterns = [
     path('catalog/', include('catalog.urls')),
     path('', RedirectView.as_view(url='/catalog/', permanent=True)),
     path('accounts/' , include("django.contrib.auth.urls")),
+
 ] + static(settings.STATIC_URL, document_root=settings.STATIC_ROOT)
 
 ################## api ###################################
@@ -52,10 +53,3 @@ from django.shortcuts import render
 from django.contrib.auth import logout
 from django.urls import path
 
-def custom_logout(request):
-    logout(request)
-    return render(request, 'registration/logged_out.html')
-
-urlpatterns += [
-    path('accounts/logout/', custom_logout, name='logout'),
-]

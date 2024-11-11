@@ -34,6 +34,6 @@ class BookInstanceAdmin(admin.ModelAdmin):
         }),
         #coloca um nome em realce no admin
         ('Availability', {
-            'fields': ('status', 'due_back')
+            'fields': ('status', 'due_back','borrower')
         }),
     )
